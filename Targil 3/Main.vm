@@ -1,0 +1,10 @@
+function Main.main 1
+push constant 255
+push constant 255
+call Board.new 2
+pop local 0
+push local 0
+call Board.drawBoard 1
+pop temp 0
+push constant 0
+return
