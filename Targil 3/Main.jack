@@ -10,6 +10,9 @@ class Main {
 		let gBoard = Board.new(255,255);
 
 		do gBoard.drawBoard();
+		/* here we need to put the number in the matrix board*/
+
+
 
 		return;
 	}
