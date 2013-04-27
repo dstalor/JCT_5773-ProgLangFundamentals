@@ -1,0 +1,30 @@
+/* does not work yet... do not use!
+*/
+class ShuffleGame {
+    // The square
+    field Square square;
+	// graphical board
+	var Board board;
+
+	
+	
+	
+    /** Constructs a new Square Game. */
+    constructor ShuffleGame new() {
+		let board = board.new(255,255);
+		let square = square.new(64,64,62);
+		do board.drawBoard();
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do square.dispose();
+        do board.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+
+}

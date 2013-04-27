@@ -9,7 +9,7 @@ class Board
   /** Creates a new board based on programmer's input.  Also handles basic error checking.
   input: 2 ints to represent size of board
   output: this */
-  constructor Board new(int x,int y)
+  constructor Board new(int x, int y)
   {
     if (x > 513)
     {
@@ -47,7 +47,7 @@ class Board
     return;
   }
 
-  /** Draws 4 lines to represent a 3x3 board
+  /** Draws 5 lines to represent a 4x4 board
   input: none
   output: none */
   method void drawBoard()
