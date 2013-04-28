@@ -6,15 +6,9 @@ class Main {
 	/** Initializes a new game and starts it. */	
 	function void main() {
 		// graphical board
-		var Board gBoard;
-		var Square gSquare;
-		let gBoard = Board.new(255,255);
-		let gSquare = Square.new(64,64,62);
-		do gBoard.drawBoard();
-		do Sys.wait(500);
-		do gSquare.moveRight();
-		do gSquare.moveDown();
-		do gBoard.drawBoard();
+		var ShuffleGame Game;
+		let Game = ShuffleGame.new();
+		do Game.run();
 		/* here we need to put the number in the matrix board*/
 
 
