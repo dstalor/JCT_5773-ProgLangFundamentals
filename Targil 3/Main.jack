@@ -7,6 +7,34 @@ class Main {
 	function void main() {
 		// graphical board
 		var ShuffleGame Game;
+		var char key;
+        var boolean exit;
+		var int timer;
+
+		do Output.moveCursor(12,20);
+		do Output.printString("Press [Space] to start!");
+		
+        let exit = false;
+		let timer = 0;
+        while (~exit) {
+            // waits for a key to be pressed.
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+				if (timer = 32767){
+					let timer = 0;
+				}
+				else {
+					let timer = (timer + 1);
+				}
+			}
+            if (key = 32) {
+                let exit = true;
+            }
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+            }
+        }
+		do LCGRandom.setSeed(timer);
 		let Game = ShuffleGame.new();
 		do Game.run();
 		/* here we need to put the number in the matrix board*/

@@ -24,7 +24,7 @@ class Square {
         let y = Ay;
         let size = Asize;
 		
-		let position = ((x / 64) + (y / 16));
+		let position = (((x + 1) / 64) + ((y + 1) / 16));
         do draw();
 
         return this;
@@ -77,11 +77,11 @@ class Square {
 		let startX = x;
 		let startY = y;
 		
-		while (startY < (y + 62)) {
+		while (startY < (y + 63)) {
 			if (y > 1) {
 				do Screen.setColor(false);
 				do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
-				let y = y - 2;
+				let y = y - 1;
 				do Screen.setColor(true);
 				do Screen.drawRectangle(x, y, x + size, y + 1);
 			}
@@ -97,11 +97,11 @@ class Square {
 		let startX = x;
 		let startY = y;
 		
-		while (startY > (y - 62)) {
+		while (startY > (y - 63)) {
 			if ((y + size) < 254) {
 				do Screen.setColor(false);
 				do Screen.drawRectangle(x, y, x + size, y + 1);
-				let y = y + 2;
+				let y = y + 1;
 				do Screen.setColor(true);
 				do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
 			}
@@ -117,11 +117,11 @@ class Square {
 		let startX = x;
 		let startY = y;
 		
-		while (startX < (x + 62)) {
+		while (startX < (x + 63)) {
 			if (x > 1) {
 				do Screen.setColor(false);
 				do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-				let x = x - 2;
+				let x = x - 1;
 				do Screen.setColor(true);
 				do Screen.drawRectangle(x, y, x + 1, y + size);
 			}
@@ -137,11 +137,11 @@ class Square {
 		let startX = x;
 		let startY = y;
 		
-		while (startX > (x - 62)) {
+		while (startX > (x - 63)) {
 			if ((x + size) < 254) {
 				do Screen.setColor(false);
 				do Screen.drawRectangle(x, y, x + 1, y + size);
-				let x = x + 2;
+				let x = x + 1;
 				do Screen.setColor(true);
 				do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
 			}
@@ -152,5 +152,9 @@ class Square {
 
 	method int getPosition() {
 		return position;
+	}
+	method void setPosition(int posIn) {
+		let position = posIn;
+		return;
 	}
 }

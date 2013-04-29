@@ -4,19 +4,34 @@ class ShuffleGame {
 	// graphical board
 	field Board board;
 	field Array positions;
+	field String instr1;
+	field String instr2;
+	field String instr3;
+	field String instr4;
+	field String instr5;
 	
     /** Constructs a new Square Game. */
     constructor ShuffleGame new() {
 		var int i;
 		let board = Board.new(255,255);
-		let square = Square.new(191,191,63);
+		let square = Square.new(191,191,62);
 
+		let instr1 = "Instructions:";
+		let instr2 = "Use [Up], [Down], [Left],";
+		let instr3 = "and [Right] to navigate.";
+		let instr4 = "Try to get all the boxes in";
+		let instr5 = "numerical order.";
+
+		
+		
 		let i=0;
 		let positions = Array.new(16);
 		while(i<16) {
 			let positions[i] = (i+1);
 			let i = (i+1);
 		}
+		
+		do randomize();
 		do printPositions();
 		do board.drawBoard();
 
@@ -51,14 +66,13 @@ class ShuffleGame {
 		var int col;
 		var int cursorX;
 		var int cursorY;
+		do Screen.clearScreen();
 		let i = 0;
 		let col = 0;
 		let row = 0;
 		while(i<16) {
 			let cursorX = ((col * 8) + 3);
 			let cursorY = ((row * 6) + 2);
-			do Output.moveCursor(cursorY,(cursorX - 2));
-			do Output.printString("         ");
 			do Output.moveCursor(cursorY,cursorX);
 			do Output.printInt(positions[i]);
 			
@@ -66,8 +80,18 @@ class ShuffleGame {
 			let row = (i / 4);
 			let col = (i - (row * 4));
 		}
-
+		do board.drawBoard();
 		do square.draw();
+		do Output.moveCursor(0,32);
+		do Output.printString(instr1);
+		do Output.moveCursor(2,32);
+		do Output.printString(instr2);
+		do Output.moveCursor(3,32);
+		do Output.printString(instr3);
+		do Output.moveCursor(5,32);
+		do Output.printString(instr4);
+		do Output.moveCursor(6,32);
+		do Output.printString(instr5);
 		return;
 	}
 	method void up() {
@@ -76,9 +100,9 @@ class ShuffleGame {
 		if (origPos > 3) {
 			do swap(origPos, (origPos - 4));
 			do square.moveUp();
-			if (~(isOver())) {
-				do printPositions();
-				do board.drawBoard();
+			do printPositions();
+			if (isOver()){
+				do congratulations();
 			}
 		}
 		return;
@@ -90,9 +114,9 @@ class ShuffleGame {
 		if (origPos < 12) {
 			do swap(origPos, (origPos + 4));
 			do square.moveDown();
-			if (~(isOver())) {
-				do printPositions();
-				do board.drawBoard();
+			do printPositions();
+			if (isOver()){
+				do congratulations();
 			}
 		}
 		return;
@@ -104,9 +128,9 @@ class ShuffleGame {
 		if ((origPos - ((origPos / 4) * 4)) > 0) {
 			do swap(origPos, (origPos - 1));
 			do square.moveLeft();
-			if (~(isOver())) {
-				do printPositions();
-				do board.drawBoard();
+			do printPositions();
+			if (isOver()){
+				do congratulations();
 			}
 		}
 		return;
@@ -118,9 +142,9 @@ class ShuffleGame {
 		if ((origPos - ((origPos / 4) * 4)) < 3) {
 			do swap(origPos, (origPos + 1));
 			do square.moveRight();
-			if (~(isOver())) {
-				do printPositions();
-				do board.drawBoard();
+			do printPositions();
+			if (isOver()){
+				do congratulations();
 			}
 		}
 		return;
@@ -129,6 +153,7 @@ class ShuffleGame {
     method void dispose() {
         do square.dispose();
         do board.dispose();
+		do postions.dispose();
         do Memory.deAlloc(this);
         return;
     }
@@ -168,4 +193,67 @@ class ShuffleGame {
         return;
 	}
 
+	method void randomize() {
+		var int i;
+		var int r;
+		var int pos;
+		let i = 0;
+		let pos = 15;
+		while (i < 100) {
+			let r = (LCGRandom.randRange(0,3));
+			if (r = 0) {
+				if (pos > 3) {
+					do swap(pos, (pos - 4));
+					let pos = (pos - 4);
+					do square.moveUp();
+				}
+			}
+			else {
+				if (r = 1) {
+					if (pos < 12) {
+						do swap(pos, (pos + 4));
+						let pos = (pos + 4);
+						do square.moveDown();
+					}
+				}
+				else {
+					if (r = 2) {
+						if ((pos - ((pos / 4) * 4)) > 0) {
+							do swap(pos, (pos - 1));
+							let pos = (pos - 1);
+							do square.moveLeft();
+						}
+					}
+					else {
+						if (r = 3) {
+							if ((pos - ((pos / 4) * 4)) < 3) {
+								do swap(pos, (pos + 1));
+								let pos = (pos + 1);
+								do square.moveRight();
+							}
+						}
+					}
+				}
+			}
+			do Screen.clearScreen();
+			let i = (i+1);
+		}
+		return;
+	}
+	
+	method void congratulations() {
+		do Output.moveCursor(0,32);
+		do Output.printString("             ");
+		do Output.moveCursor(2,32);
+		do Output.printString("                         ");
+		do Output.moveCursor(3,32);
+		do Output.printString("                        ");
+		do Output.moveCursor(5,32);
+		do Output.printString("                           ");
+		do Output.moveCursor(6,32);
+		do Output.printString("                ");
+		do Output.moveCursor(1,36);
+		do Output.printString("Congratulations! You won!");
+		return;
+	}
 }
