@@ -1,11 +1,9 @@
-/**
- * The Main class initializes a new TicJackToe game and starts it.
- */
 class Main {
 
-	/** Initializes a new game and starts it. */	
+	/** Waits for input and seeds our Random function based on the wait
+		Creates new ShuffleGame and runs it
+	*/	
 	function void main() {
-		// graphical board
 		var ShuffleGame Game;
 		var char key;
         var boolean exit;
@@ -37,7 +35,6 @@ class Main {
 		do LCGRandom.setSeed(timer);
 		let Game = ShuffleGame.new();
 		do Game.run();
-		/* here we need to put the number in the matrix board*/
 
 
 

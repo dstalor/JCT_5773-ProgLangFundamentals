@@ -70,7 +70,7 @@ class Square {
         return;
 	}
 
-    /** Moves up by 2. */
+    /** Moves up by 1. */
     method void moveUp() {
         var int startX;
 		var int startY;
@@ -90,7 +90,7 @@ class Square {
         return;
     }
 
-    /** Moves down by 2. */
+    /** Moves down by 1. */
     method void moveDown() {
         var int startX;
 		var int startY;
@@ -110,7 +110,7 @@ class Square {
         return;
     }
 
-    /** Moves left by 2. */
+    /** Moves left by 1. */
     method void moveLeft() {
         var int startX;
 		var int startY;
@@ -130,7 +130,7 @@ class Square {
         return;
     }
 
-    /** Moves right by 2. */
+    /** Moves right by 1. */
     method void moveRight() {
         var int startX;
 		var int startY;
