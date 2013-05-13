@@ -95,7 +95,11 @@ class ShuffleGame {
 		do Output.printString(instr5);
 		return;
 	}
+<<<<<<< HEAD
 	// up action by reduce the place by 4 because is a board with 4 case width
+=======
+	//up action by reduce the place by 4 because is a board with 4 case width
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
 	method void up() {
 		var int origPos;
 		let origPos = (square.getPosition());
@@ -109,7 +113,11 @@ class ShuffleGame {
 		}
 		return;
 	}
+<<<<<<< HEAD
 	//movement action
+=======
+	//mouvement action
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
 	method void down() {
 		var int origPos;
 		let origPos = square.getPosition();
@@ -123,7 +131,11 @@ class ShuffleGame {
 		}
 		return;
 	}
+<<<<<<< HEAD
 	//movement action
+=======
+		//mouvement action
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
 	method void left() {
 		var int origPos;
 		let origPos = square.getPosition();
@@ -137,7 +149,11 @@ class ShuffleGame {
 		}
 		return;
 	}
+<<<<<<< HEAD
 	//movement action
+=======
+		//mouvement action
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
 	method void right() {
 		var int origPos;
 		let origPos = square.getPosition();
@@ -159,9 +175,14 @@ class ShuffleGame {
         do Memory.deAlloc(this);
         return;
     }
+<<<<<<< HEAD
 /*	that the run function we call from the main.vm,
 	they receive the key pressed by the user and react	*/
 
+=======
+//that the run function we call from the main.vm,
+//they receive the key pressed by the user and react 
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
     method void run() {
         var char key;
         var boolean exit;
@@ -197,7 +218,11 @@ class ShuffleGame {
         }
         return;
 	}
+<<<<<<< HEAD
 	//to randomize the board with 100 random movements
+=======
+	//to randomize the board with 100 random mouvement
+>>>>>>> 546e136068dbf76a2d130c73364ac421eba26dd9
 	method void randomize() {
 		var int i;
 		var int r;
