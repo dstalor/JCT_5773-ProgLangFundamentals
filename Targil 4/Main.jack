@@ -3,9 +3,6 @@
 // MIT Press. Book site: www.idc.ac.il/tecs
 // File name: projects/10/Square/Main.jack
 
-/**
- * The Main class initializes a new Square Dance game and starts it.
- */
 class Main {
 
     /** Initializes a new game and starts it. */    
