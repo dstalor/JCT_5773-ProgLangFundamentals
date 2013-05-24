@@ -110,49 +110,50 @@ subroutineBody = do{ symbol "{"
 				}
 
 varDec	= do {	reserved "var"
-			;	p <- commaSep1 param
+			;	t <- jackType
+			;	v <- commaSep1 varName
 			;	semi
-			;	return (unlines ["<varDec>","<keyword> var </keyword>",unlines(intersperse "<symbol> , </symbol>" p),"<symbol> ; </symbol>","</varDec>"])
+			;	return (unlines ["<varDec>","<keyword> var </keyword>",t,unlines(intersperse "<symbol> , </symbol>" v),"<symbol> ; </symbol>","</varDec>"])
 			}
 				
-jackOp = try (do{ reservedOp "+"; return ("<symbol> + </symbol>")})
-	<|> try (do{ reservedOp  "-"; return ("<symbol> - </symbol>")})
-	<|> try (do{ reservedOp  "*"; return ("<symbol> * </symbol>")})
-	<|> try (do{ reservedOp  "/"; return ("<symbol> / </symbol>")})
-	<|> try (do{ reservedOp  "&"; return ("<symbol> &amp; </symbol>")})
-	<|> try (do{ reservedOp  "|"; return ("<symbol> | </symbol>")})
-	<|> try (do{ reservedOp  "<"; return ("<symbol> &lt; </symbol>")})
-	<|> try (do{ reservedOp  ">"; return ("<symbol> &gt; </symbol>")})
-	<|> try (do{ reservedOp  "="; return ("<symbol> = </symbol>")})
+jackOp = do{ reservedOp "+"; return ("<symbol> + </symbol>")}
+	<|> do{ reservedOp  "-"; return ("<symbol> - </symbol>")}
+	<|> do{ reservedOp  "*"; return ("<symbol> * </symbol>")}
+	<|> do{ reservedOp  "/"; return ("<symbol> / </symbol>")}
+	<|> do{ reservedOp  "&"; return ("<symbol> &amp; </symbol>")}
+	<|> do{ reservedOp  "|"; return ("<symbol> | </symbol>")}
+	<|> do{ reservedOp  "<"; return ("<symbol> &lt; </symbol>")}
+	<|> do{ reservedOp  ">"; return ("<symbol> &gt; </symbol>")}
+	<|> do{ reservedOp  "="; return ("<symbol> = </symbol>")}
 
-unaryOp = try (do{ reservedOp  "-"; return ("<symbol> - </symbol>")})
-	<|> try (do{ reservedOp  "~"; return ("<symbol> ~ </symbol>")})
+unaryOp = do{ reservedOp  "-"; return ("<symbol> - </symbol>")}
+	<|> do{ reservedOp  "~"; return ("<symbol> ~ </symbol>")}
 			
-jackExpression = try (do{t <- try (jackTerm); return (unlines ["<expression>",t,"</expression>"])})
-				<|> do {t1 <- jackTerm
-					; o <- jackOp
-					; t2 <- jackTerm
-					; return (unlines ["<expression>",t1,o,t2,"</expression>"])
-					}
+jackExpression = try (do{	t1 <- jackTerm
+					; 	o  <- jackOp
+					; 	t2 <- jackTerm
+					; 	return (unlines ["<expression>",t1,o,t2,"</expression>"])
+					})
+				<|> do{t  <- try (jackTerm); return (unlines ["<expression>",t,"</expression>"])}
 
 integerConstant = try (do{i <- try (decimal); 	return ("<integerConstant> " ++ show i ++ " </integerConstant>")})
 
 stringConstant = try (do{s <- try (stringLiteral); return ("<stringConstant> " ++ s ++ " </stringConstant>")})
 
-jackTerm =  do{ t <- integerConstant; return (unlines ["<term>",t,"</term>"])}
-		<|> do{ t <- stringConstant; return (unlines ["<term>",t,"</term>"])}
-		<|> do{ t <- keywordConstant; return (unlines ["<term>",t,"</term>"])}
-		<|> do{ t <- subroutineCall; return (unlines ["<term>",t,"</term>"])}
-		<|> do{ t <- varName; return (unlines ["<term>",t,"</term>"])}
+jackTerm =  try (do{ t <- integerConstant; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do{ t <- stringConstant; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do{ t <- keywordConstant; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do{ t <- subroutineCall; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do{ o <- unaryOp
+			;	t <- jackTerm
+			; 	return (unlines ["<term>",o,t,"</term>"])
+			})
+		<|> try (do{ e <- parens jackExpression; return (unlines ["<term>","<symbol> ( </symbol>",e,"<symbol> ) </symbol>","</term>"])})
 		<|> try (do{ v <- try (varName)
-				;	 e <- try (squares jackExpression)
+				;	 e <- squares jackExpression
 				;	 return (unlines ["<term>",v,"<symbol> [ </symbol>",e,"<symbol> ] </symbol>","</term>"])
 				})
-		<|> try (do{ e <- try (parens jackExpression); return (unlines ["<term>","<symbol> ( </symbol>",e,"<symbol> ) </symbol>","</term>"])})
-		<|> try (do{ o <- try (unaryOp)
-				;	 t <- try (jackTerm)
-				; 	 return (unlines ["<term>",t,"</term>"])
-				})
+		<|> try (do{ t <- varName; return (unlines ["<term>",t,"</term>"])})
 
 subroutineCall = 	try (do {s <- try (subroutineName)
 					;	e <- try (parens expressionList)
@@ -171,11 +172,11 @@ subroutineCall = 	try (do {s <- try (subroutineName)
 					;	return (unlines [v,"<symbol> . </symbol>",s,"<symbol> ( </symbol>",e,"<symbol> ) </symbol>"])
 					}
 					
-expressionList 	= do{ l <- commaSep jackExpression; return (unlines ["<expressionList>",unlines l,"</expressionList>"])}
+expressionList 	= do{ l <- commaSep jackExpression; return (unlines ["<expressionList>",unlines(intersperse "<symbol> , </symbol>" l),"</expressionList>"])}
 
-className 		= do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")}
-subroutineName	= do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")}
-varName 		= do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")}
+className 		= try (do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")})
+subroutineName	= try (do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")})
+varName 		= try (do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")})
 
 keywordConstant =	try (do{ try (reserved "true"); return "<keyword> true </keyword>"})
 				<|> try (do{ try (reserved "false"); return "<keyword> false </keyword>"})
@@ -188,10 +189,10 @@ statements = do{ x <- many1 statement
 			}
 
 statement :: Parser String
-statement = letStmt
-		   <|> ifStmt
-           <|> whileStmt
-           <|> doStmt
+statement = try (letStmt)
+		   <|> try (ifStmt)
+           <|> try (whileStmt)
+           <|> try (doStmt)
            <|> returnStmt
 
 letStmt :: Parser String
@@ -212,13 +213,13 @@ letStmt =	try (do {try (reserved "let")
 				}
 
 ifStmt :: Parser String
-ifStmt =  	do{	reserved "if"
+ifStmt =  try(	do{	reserved "if"
 			;	e <- parens jackExpression
 			;	s1 <- braces statements
 			;	reserved "else"
 			;	s2 <- braces statements
 			;	return (unlines["<ifStatement>","<keyword> if </keyword>","<symbol> ( </symbol>",e,"<symbol> ) </symbol>","<symbol> { </symbol>",s1,"<symbol> } </symbol>","<keyword> else </keyword>","<symbol> { </symbol>",s2,"<symbol> } </symbol>","</ifStatement>"])
-			}
+			})
 		<|>	do{	reserved "if"
 			;	e <- parens jackExpression
 			;	s <- braces statements
@@ -250,15 +251,21 @@ returnStmt = try(	do{	reserved "return"
 				;	return (unlines["<returnStatement>","<keyword> return </keyword>","<symbol> ; </symbol>","</returnStatement>"])
 				}
 
-parseString :: String -> IO ()
+				
+stripExtraLineBr :: String -> String
+stripExtraLineBr [] = []
+stripExtraLineBr ('\n':'\n':xs) = stripExtraLineBr ('\n':xs)
+stripExtraLineBr (x:xs) = x : stripExtraLineBr xs
+				
+parseString :: String -> IO String
 parseString str =
   case parse whileParser "" str of
     Left e  -> error $ show e
-    Right r -> putStr r
+    Right r -> return (stripExtraLineBr r)
  
-parseFile :: String -> IO ()
+parseFile :: String -> IO String
 parseFile file =
   do program  <- readFile file
      case parse whileParser "" program of
        Left e  -> print e >> fail "parse error"
-       Right r -> putStr r
+       Right r -> return (stripExtraLineBr r)
