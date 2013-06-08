@@ -9,8 +9,8 @@ import qualified Text.ParserCombinators.Parsec.Token as Token
 import qualified Data.List as List
 import qualified Data.Map as Map
 
---mapIndexer :: Map.Map k a -> String -> Map.Map k b
-mapIndexer m s = (Map.fromList (List.map (\(x,y) -> (x,(y,s,Map.findIndex x))) (Map.toList m)))
+mapIndexer m s 	= (Map.fromList (List.map (\(x,y) -> (x,(y,s,(Map.findIndex x m)))) (Map.toList m)))
+showMap m 		= (Map.showTreeWith (\k (x,y,z) -> (show k) ++ "|" ++ (show x) ++ "|" ++ (show y) ++ "|" ++ (show z)) False False m)
 
 --- Lexer ---
 jackDef = emptyDef{ Token.commentStart = "/*"
@@ -46,7 +46,7 @@ commaSep1  		= Token.commaSep1  lexer -- parses a comma seperated list
 stringLiteral 	= Token.stringLiteral  	lexer -- parses a literal string
 symbol	   		= Token.symbol 	  		lexer -- parses a symbol
 dot 	   		= Token.dot  	  		lexer -- parses a dot 
-
+lexeme 			= Token.lexeme			lexer
 
 whileParser :: Parser String
 whileParser = whiteSpace >> jackClass
@@ -59,11 +59,12 @@ jackClass 	= do {	reserved "class"
 				;	cvd <- many (classVarDec staticMap fieldMap)
 				;	let staticMap = (mapIndexer (Map.unions (List.map (\(x,(y,z)) -> y) cvd)) "static")
 				;	let fieldMap = (mapIndexer (Map.unions (List.map (\(x,(y,z)) -> z) cvd)) "field")
+				;	let classMap = (Map.union staticMap fieldMap)
 				;	let cvd2 = (List.map (\(x,(y,z)) -> x) cvd)
 				;	sd <- many subroutineDec
 				;	symbol "}"
-				;	return (unlines["<class>","<keyword> class </keyword>",c,"<symbol> { </symbol>",unlines cvd2,unlines sd,"<symbol> } </symbol>","</class>"])
-				} -- "-----------------","staticMap:",(Map.showTree staticMap),"fieldMap:",(Map.showTree fieldMap),"-----------------",
+				;	return (unlines["<class>",showMap classMap,"<keyword> class </keyword>",c,"<symbol> { </symbol>",unlines cvd2,unlines sd,"<symbol> } </symbol>","</class>"])
+				}
 
 classVarDec	staticMap fieldMap = 	do {reserved "static"
 				;	t <- jackType
@@ -86,46 +87,79 @@ jackType = 	do {reserved "int"; return ("<keyword> int </keyword>")}
 		<|>	do {c <- className; return c}
 		
 subroutineDec =	do{	reserved "constructor"
+				;	let argMap = Map.empty
+				;	let varMap = Map.empty
 				;	t  <- subroutineDecType
 				;	sn <- subroutineName
-				;	pl <- parens parameterList
-				;	sb <- subroutineBody
-				;	return (unlines ["<subroutineDec>","<keyword> constructor </keyword>",t,sn,"<symbol> ( </symbol>",pl,"<symbol> ) </symbol>",sb,"</subroutineDec>"])
+				;	pl <- parens (parameterList argMap)
+				;	let argMap = (mapIndexer (snd pl) "argument")
+				;	let pl2 = (fst pl)
+				;	sb <- subroutineBody varMap
+				;	let varMap = (mapIndexer (snd sb) "var")
+				;	let sb2 = (fst sb)
+				;	let methodMap = (Map.union argMap varMap)
+				;	return (unlines ["<subroutineDec>",showMap methodMap,"<keyword> constructor </keyword>",t,sn,"<symbol> ( </symbol>",pl2,"<symbol> ) </symbol>",sb2,"</subroutineDec>"])
 				}
 			<|>	do{	reserved "function"
+				;	let argMap = Map.empty
+				;	let varMap = Map.empty
 				;	t  <- subroutineDecType
 				;	sn <- subroutineName
-				;	pl <- parens parameterList
-				;	sb <- subroutineBody
-				;	return (unlines ["<subroutineDec>","<keyword> function </keyword>",t,sn,"<symbol> ( </symbol>",pl,"<symbol> ) </symbol>",sb,"</subroutineDec>"])
+				;	pl <- parens (parameterList argMap)
+				;	let argMap = (mapIndexer (snd pl) "argument")
+				;	let pl2 = (fst pl)
+				;	sb <- subroutineBody varMap
+				;	let varMap = (mapIndexer (snd sb) "var")
+				;	let sb2 = (fst sb)
+				;	let methodMap = (Map.union argMap varMap)
+				;	return (unlines ["<subroutineDec>",showMap methodMap,"<keyword> function </keyword>",t,sn,"<symbol> ( </symbol>",pl2,"<symbol> ) </symbol>",sb2,"</subroutineDec>"])
 				}
 			<|>	do{	reserved "method"
+				;	let argMap = Map.empty
+				;	let varMap = Map.empty
 				;	t  <- subroutineDecType
 				;	sn <- subroutineName
-				;	pl <- parens parameterList
-				;	sb <- subroutineBody
-				;	return (unlines ["<subroutineDec>","<keyword> method </keyword>",t,sn,"<symbol> ( </symbol>",pl,"<symbol> ) </symbol>",sb,"</subroutineDec>"])
+				;	pl <- parens (parameterList argMap)
+				;	let argMap = (mapIndexer (snd pl) "argument")
+				;	let pl2 = (fst pl)
+				;	sb <- subroutineBody varMap
+				;	let varMap = (mapIndexer (snd sb) "var")
+				;	let sb2 = (fst sb)
+				;	let methodMap = (Map.union argMap varMap)
+				;	return (unlines ["<subroutineDec>",showMap methodMap,"<keyword> method </keyword>",t,sn,"<symbol> ( </symbol>",pl2,"<symbol> ) </symbol>",sb2,"</subroutineDec>"])
 				}
 				
 subroutineDecType =	try (do {reserved "void"; return ("<keyword> void </keyword>")})
 				<|>	do {t <- jackType; return t}
 				
-parameterList =	do{p <- commaSep param; return (unlines["<parameterList>",unlines(List.intersperse "<symbol> , </symbol>" p),"</parameterList>"])}
-param = do {t <- jackType; v <- varName; return (unlines [t,v])}
+parameterList argMap 	= do	{	p <- commaSep (param argMap)
+								;	let p2 = (List.map (\(x,y) -> x) p)
+								;	let argMap = (Map.unions (List.map (\(x,y) -> y) p))
+								; 	return ((unlines["<parameterList>",unlines(List.intersperse "<symbol> , </symbol>" p2),"</parameterList>"]),argMap)
+								}
+									
+param argMap 			= do 	{	t <- jackType
+								; 	v <- varName
+								;	let newArgMap = (Map.singleton v t)
+								; 	return ((unlines [t,v]),newArgMap)
+								}
 
-subroutineBody = do{ symbol "{"
-				;	 v <- many varDec
-				;	 s <- statements
-				;	 symbol "}"
-				;	 return (unlines ["<subroutineBody>","<symbol> { </symbol>",unlines v,s,"<symbol> } </symbol>","</subroutineBody>"])
-				}
+subroutineBody varMap 	= do	{	symbol "{"
+								;	v <- many (varDec varMap)
+								;	let v2 = (List.map (\(x,y) -> x) v)
+								;	let varMap = (Map.unions (List.map (\(x,y) -> y) v))
+								;	s <- statements
+								;	symbol "}"
+								;	return ((unlines ["<subroutineBody>","<symbol> { </symbol>",unlines v2,s,"<symbol> } </symbol>","</subroutineBody>"]),varMap)
+								}
 
-varDec	= do {	reserved "var"
-			;	t <- jackType
-			;	v <- commaSep1 varName
-			;	semi
-			;	return (unlines ["<varDec>","<keyword> var </keyword>",t,unlines(List.intersperse "<symbol> , </symbol>" v),"<symbol> ; </symbol>","</varDec>"])
-			}
+varDec varMap			= do 	{	reserved "var"
+								;	t <- jackType
+								;	v <- commaSep1 varName
+								;	let newVarMap = (Map.union (Map.fromList (zip v (repeat t))) varMap)
+								;	semi
+								;	return ((unlines ["<varDec>","<keyword> var </keyword>",t,unlines(List.intersperse "<symbol> , </symbol>" v),"<symbol> ; </symbol>","</varDec>"]),newVarMap)
+								}
 				
 jackOp = do{ reservedOp "+"; return ("<symbol> + </symbol>")}
 	<|> do{ reservedOp  "-"; return ("<symbol> - </symbol>")}
@@ -140,31 +174,31 @@ jackOp = do{ reservedOp "+"; return ("<symbol> + </symbol>")}
 unaryOp = do{ reservedOp  "-"; return ("<symbol> - </symbol>")}
 	<|> do{ reservedOp  "~"; return ("<symbol> ~ </symbol>")}
 			
-jackExpression = try (do{	t1 <- jackTerm
-					; 	o  <- jackOp
-					; 	t2 <- jackTerm
-					; 	return (unlines ["<expression>",t1,o,t2,"</expression>"])
-					})
-				<|> do{t  <- try (jackTerm); return (unlines ["<expression>",t,"</expression>"])}
+jackExpression = try (do	{	t1 <- jackTerm
+						; 	o  <- jackOp
+						; 	t2 <- jackTerm
+						; 	return (unlines ["<expression>",t1,o,t2,"</expression>"])
+						})
+				<|> try (do{t  <- try (jackTerm); return (unlines ["<expression>",t,"</expression>"])})
 
 integerConstant = try (do{i <- try (decimal); 	return ("<integerConstant> " ++ show i ++ " </integerConstant>")})
 
 stringConstant = try (do{s <- try (stringLiteral); return ("<stringConstant> " ++ s ++ " </stringConstant>")})
 
-jackTerm =  try (do{ t <- integerConstant; return (unlines ["<term>",t,"</term>"])})
-		<|> try (do{ t <- stringConstant; return (unlines ["<term>",t,"</term>"])})
-		<|> try (do{ t <- keywordConstant; return (unlines ["<term>",t,"</term>"])})
-		<|> try (do{ t <- subroutineCall; return (unlines ["<term>",t,"</term>"])})
-		<|> try (do{ o <- unaryOp
-			;	t <- jackTerm
-			; 	return (unlines ["<term>",o,t,"</term>"])
-			})
-		<|> try (do{ e <- parens jackExpression; return (unlines ["<term>","<symbol> ( </symbol>",e,"<symbol> ) </symbol>","</term>"])})
+jackTerm =  try (do	{ 	t <- integerConstant; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do	{ 	t <- stringConstant; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do	{ 	t <- try (keywordConstant); return (unlines ["<term>",t,"</term>"])})
+		<|> try (do	{ 	t <- try (subroutineCall); return (unlines ["<term>",t,"</term>"])})
+		<|> try (do	{ 	o <- try (unaryOp)
+					;	t <- try (jackTerm)
+					; 	return (unlines ["<term>",o,t,"</term>"])
+					})
+		<|> try (do{ e <- try (parens jackExpression); return (unlines ["<term>","<symbol> ( </symbol>",e,"<symbol> ) </symbol>","</term>"])})
 		<|> try (do{ v <- try (varName)
-				;	 e <- squares jackExpression
+				;	 e <- try (squares jackExpression)
 				;	 return (unlines ["<term>",v,"<symbol> [ </symbol>",e,"<symbol> ] </symbol>","</term>"])
 				})
-		<|> try (do{ t <- varName; return (unlines ["<term>",t,"</term>"])})
+		<|> try (do{ t <- try(varName); return (unlines ["<term>",t,"</term>"])})
 
 subroutineCall = 	try (do {s <- try (subroutineName)
 					;	e <- try (parens expressionList)
@@ -176,14 +210,14 @@ subroutineCall = 	try (do {s <- try (subroutineName)
 					;	e <- try (parens expressionList)
 					;	return (unlines [c,"<symbol> . </symbol>",s,"<symbol> ( </symbol>",e,"<symbol> ) </symbol>"])
 					})
-			<|> 	do {v <- varName
-					;	dot
-					;	s <- subroutineName
-					;	e <- parens expressionList
+			<|> 	try (do {v <- try (varName)
+					;	try (dot)
+					;	s <- try (subroutineName)
+					;	e <- try (parens expressionList)
 					;	return (unlines [v,"<symbol> . </symbol>",s,"<symbol> ( </symbol>",e,"<symbol> ) </symbol>"])
-					}
+					})
 					
-expressionList 	= do{ l <- commaSep jackExpression; return (unlines ["<expressionList>",unlines(List.intersperse "<symbol> , </symbol>" l),"</expressionList>"])}
+expressionList 	= do{ l <- (commaSep (lexeme jackExpression)); return (unlines ["<expressionList>",unlines(List.intersperse "<symbol> , </symbol>" l),"</expressionList>"])}
 
 className 		= try (do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")})
 subroutineName	= try (do{ i <- identifier ; return ("<identifier> " ++ i ++ " </identifier>")})

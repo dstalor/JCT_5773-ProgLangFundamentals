@@ -1,12 +1,11 @@
 <class>
------------------
-staticMap:
-|
-fieldMap:
-"<identifier> x </identifier>":="<keyword> int </keyword>"
-+--"<identifier> size </identifier>":="<keyword> int </keyword>"
-+--"<identifier> y </identifier>":="<keyword> int </keyword>"
------------------
+   +--"<identifier> y </identifier>"|"<keyword> int </keyword>"|"field"|2
++--"<identifier> x </identifier>"|"<keyword> int </keyword>"|"field"|1
+|  +--"<identifier> size </identifier>"|"<keyword> char </keyword>"|"field"|0
+"<identifier> d </identifier>"|"<keyword> boolean </keyword>"|"static"|3
+|  +--"<identifier> c </identifier>"|"<keyword> boolean </keyword>"|"static"|2
++--"<identifier> b </identifier>"|"<keyword> boolean </keyword>"|"static"|1
+   +--"<identifier> a </identifier>"|"<keyword> boolean </keyword>"|"static"|0
 <keyword> class </keyword>
 <identifier> Square </identifier>
 <symbol> { </symbol>
@@ -20,11 +19,28 @@ fieldMap:
 </classVarDec>
 <classVarDec>
 <keyword> field </keyword>
-<keyword> int </keyword>
+<keyword> char </keyword>
 <identifier> size </identifier>
 <symbol> ; </symbol>
 </classVarDec>
+<classVarDec>
+<keyword> static </keyword>
+<keyword> boolean </keyword>
+<identifier> a </identifier>
+<symbol> , </symbol>
+<identifier> c </identifier>
+<symbol> , </symbol>
+<identifier> b </identifier>
+<symbol> , </symbol>
+<identifier> d </identifier>
+<symbol> ; </symbol>
+</classVarDec>
 <subroutineDec>
++--"<identifier> Ay </identifier>"|"<keyword> int </keyword>"|"argument"|2
+"<identifier> Ax </identifier>"|"<keyword> int </keyword>"|"argument"|1
++--"<identifier> Asize </identifier>"|"<keyword> int </keyword>"|"argument"|0
+ 
+|
 <keyword> constructor </keyword>
 <identifier> Square </identifier>
 <identifier> new </identifier>
@@ -99,6 +115,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> dispose </identifier>
@@ -134,6 +153,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> draw </identifier>
@@ -211,6 +233,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> erase </identifier>
@@ -288,6 +313,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> incSize </identifier>
@@ -398,6 +426,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> decSize </identifier>
@@ -468,6 +499,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveUp </identifier>
@@ -650,6 +684,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveDown </identifier>
@@ -842,6 +879,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveLeft </identifier>
@@ -1024,6 +1064,9 @@ fieldMap:
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
+|
+ 
+|
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveRight </identifier>

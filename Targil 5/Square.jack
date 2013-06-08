@@ -14,8 +14,8 @@ class Square {
     field int x, y;
 
     // The size of the square
-    field int size;
-
+    field char size;
+	static boolean a,c,b,d;
     /** Constructs a new square with a given location and size. */
     constructor Square new(int Ax, int Ay, int Asize) {
         let x = Ax;
