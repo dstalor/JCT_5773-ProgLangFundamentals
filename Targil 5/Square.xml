@@ -36,11 +36,11 @@
 <symbol> ; </symbol>
 </classVarDec>
 <subroutineDec>
-+--"<identifier> Ay </identifier>"|"<keyword> int </keyword>"|"argument"|2
-"<identifier> Ax </identifier>"|"<keyword> int </keyword>"|"argument"|1
-+--"<identifier> Asize </identifier>"|"<keyword> int </keyword>"|"argument"|0
- 
-|
+   +--"<identifier> Ay </identifier>"|"<keyword> int </keyword>"|"argument"|3
++--"<identifier> Ax </identifier>"|"<keyword> int </keyword>"|"argument"|2
+|  +--|
+"<identifier> Asize </identifier>"|"<keyword> int </keyword>"|"argument"|1
++--" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> constructor </keyword>
 <identifier> Square </identifier>
 <identifier> new </identifier>
@@ -115,9 +115,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> dispose </identifier>
@@ -153,9 +151,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> draw </identifier>
@@ -233,9 +229,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> erase </identifier>
@@ -313,9 +307,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> incSize </identifier>
@@ -426,9 +418,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> decSize </identifier>
@@ -499,9 +489,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveUp </identifier>
@@ -684,9 +672,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveDown </identifier>
@@ -879,9 +865,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveLeft </identifier>
@@ -1064,9 +1048,7 @@
 </subroutineBody>
 </subroutineDec>
 <subroutineDec>
-|
- 
-|
+" this"|"<identifier> Square </identifier>"|"argument"|0
 <keyword> method </keyword>
 <keyword> void </keyword>
 <identifier> moveRight </identifier>
