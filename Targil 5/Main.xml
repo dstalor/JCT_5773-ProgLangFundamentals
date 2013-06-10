@@ -33,23 +33,17 @@
 <symbol> ( </symbol>
 <expressionList>
 <expression>
-<term>
-<integerConstant> 8001 </integerConstant>
-</term>
+push constant 8001
+</expression>
+<symbol> , </symbol>
+<expression>
+push constant 16
 </expression>
 <symbol> , </symbol>
 <expression>
 <term>
-<integerConstant> 16 </integerConstant>
-</term>
-</expression>
-<symbol> , </symbol>
-<expression>
-<term>
+push constant 1
 neg
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
 </term>
 </expression>
 </expressionList>
@@ -68,9 +62,7 @@ neg
 <symbol> ( </symbol>
 <expressionList>
 <expression>
-<term>
-<integerConstant> 8000 </integerConstant>
-</term>
+push constant 8000
 </expression>
 </expressionList>
 <symbol> ) </symbol>
@@ -166,9 +158,7 @@ neg
 <term>
 <identifier> position </identifier>
 </term>
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
+push constant 1
 add
 </expression>
 <symbol> ; </symbol>
@@ -203,9 +193,7 @@ add
 <symbol> ( </symbol>
 <expressionList>
 <expression>
-<term>
-<integerConstant> 9000 </integerConstant>
-</term>
+push constant 9000
 <term>
 <identifier> position </identifier>
 </term>
@@ -226,20 +214,18 @@ add
 <symbol> ( </symbol>
 <expression>
 <term>
-neg
 <term>
 <symbol> ( </symbol>
 <expression>
 <term>
 <identifier> position </identifier>
 </term>
-<term>
-<integerConstant> 16 </integerConstant>
-</term>
+push constant 16
 <symbol> &gt; </symbol>
 </expression>
 <symbol> ) </symbol>
 </term>
+neg
 </term>
 </expression>
 <symbol> ) </symbol>
@@ -250,7 +236,6 @@ neg
 <symbol> ( </symbol>
 <expression>
 <term>
-neg
 <term>
 <symbol> ( </symbol>
 <expression>
@@ -267,13 +252,12 @@ neg
 </expression>
 <symbol> ) </symbol>
 </term>
-<term>
-<integerConstant> 0 </integerConstant>
-</term>
+push constant 0
 <symbol> = </symbol>
 </expression>
 <symbol> ) </symbol>
 </term>
+neg
 </term>
 </expression>
 <symbol> ) </symbol>
@@ -287,9 +271,7 @@ neg
 <symbol> ( </symbol>
 <expressionList>
 <expression>
-<term>
-<integerConstant> 8000 </integerConstant>
-</term>
+push constant 8000
 <term>
 <identifier> position </identifier>
 </term>
@@ -297,9 +279,7 @@ add
 </expression>
 <symbol> , </symbol>
 <expression>
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
+push constant 1
 </expression>
 </expressionList>
 <symbol> ) </symbol>
@@ -318,9 +298,7 @@ add
 <symbol> ( </symbol>
 <expressionList>
 <expression>
-<term>
-<integerConstant> 8000 </integerConstant>
-</term>
+push constant 8000
 <term>
 <identifier> position </identifier>
 </term>
@@ -328,9 +306,7 @@ add
 </expression>
 <symbol> , </symbol>
 <expression>
-<term>
-<integerConstant> 0 </integerConstant>
-</term>
+push constant 0
 </expression>
 </expressionList>
 <symbol> ) </symbol>
@@ -392,9 +368,7 @@ add
 <term>
 <identifier> mask </identifier>
 </term>
-<term>
-<integerConstant> 0 </integerConstant>
-</term>
+push constant 0
 <symbol> = </symbol>
 </expression>
 <symbol> ) </symbol>
@@ -403,9 +377,7 @@ add
 <returnStatement>
 <keyword> return </keyword>
 <expression>
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
+push constant 1
 </expression>
 <symbol> ; </symbol>
 </returnStatement>
@@ -420,9 +392,7 @@ add
 <term>
 <identifier> mask </identifier>
 </term>
-<term>
-<integerConstant> 2 </integerConstant>
-</term>
+push constant 2
 <symbol> * </symbol>
 </expression>
 <symbol> ; </symbol>
@@ -465,9 +435,7 @@ add
 <term>
 <identifier> length </identifier>
 </term>
-<term>
-<integerConstant> 0 </integerConstant>
-</term>
+push constant 0
 <symbol> &gt; </symbol>
 </expression>
 <symbol> ) </symbol>
@@ -503,9 +471,7 @@ add
 <term>
 <identifier> length </identifier>
 </term>
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
+push constant 1
 sub
 </expression>
 <symbol> ; </symbol>
@@ -518,9 +484,7 @@ sub
 <term>
 <identifier> startAddress </identifier>
 </term>
-<term>
-<integerConstant> 1 </integerConstant>
-</term>
+push constant 1
 add
 </expression>
 <symbol> ; </symbol>
