@@ -58,7 +58,7 @@ dot 	   		= Token.dot  	  		lexer -- parses a dot
 natural 		= Token.natural 		lexer -- parses natural numbers
 
 whileParser = whiteSpace >> jackClass
-
+--function part--
 jackClass  = do {	reserved "class"
 				;	c <- className
 				;	symbol "{"
