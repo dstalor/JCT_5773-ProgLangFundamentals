@@ -6,7 +6,7 @@ import System.Environment
 
 process_jack file = do
 		parsed <- parseFile file
-		let newName = replaceExtension file ".new.vm"
+		let newName = replaceExtension file ".vm"
 		writeFile newName parsed
 		putStrLn (newName ++ " saved.")
 

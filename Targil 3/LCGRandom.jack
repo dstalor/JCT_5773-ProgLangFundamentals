@@ -49,7 +49,7 @@ class LCGRandom {
     /* returns a random int in range low..high inclusive */ 
     function int randRange(int low, int high) { 
        var int scale; 
-       let scale = (M / (high - low + 1)); 
+       let scale = (M / ((high - low) + 1)); 
        return (LCGRandom.rand() / scale) + low; 
     } 
 }
