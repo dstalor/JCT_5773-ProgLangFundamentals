@@ -12,12 +12,9 @@ import Data.IORef
 import Data.Char
 import Data.Maybe	
 
-mapIndexer m s 	= (Map.fromList (List.map (\(x,y) -> (x,(y,s,(Map.findIndex x m)))) (Map.toList m)))
-
 listIndexer :: [(String,String)] -> String -> [(String, (String, String, Int))]
 listIndexer l s = List.map (\(x,y) -> (x,(y,s,(fromJust(List.elemIndex (x,y) l))))) l
 
-showMap m 		= (Map.showTreeWith (\k (x,y,z) -> (show k) ++ "|" ++ (show x) ++ "|" ++ (show y) ++ "|" ++ (show z)) False False m)
 vmVar (c,m) varName	= ((\(x,y,z) -> (y ++ " " ++ show z)) (fromJust(List.lookup varName (c ++ m))))
 vmVarMaybe (c,m) varName	= (List.lookup varName (c ++ m))
 vmString (xs)	= unlines (["push constant " ++ show (length xs),"call String.new 1"] ++ (List.map (\x -> "push constant " ++ show (ord x) ++ "\ncall String.appendChar 2") xs))
@@ -225,7 +222,6 @@ subroutineCall thisClassName maps = try(do {s <- subroutineName
 										;	let num_e = show (read (snd e) + 1)
 										;	let new_e = (fst e)
 										;	return (unlines ["push pointer 0",new_e,"call " ++ thisClassName ++ "." ++ s ++ " " ++ num_e])
---										;	return (unlines ["push pointer 0",new_e,"call " ++ thisClassName ++ "." ++ s ++ " " ++ num_e,"pop temp 0"])
 										})
 							<|>		try(do {v <- varName
 									;	if (isJust (vmVarMaybe maps v))
@@ -235,7 +231,6 @@ subroutineCall thisClassName maps = try(do {s <- subroutineName
 											;	let num_e = show (read (snd e) + 1)
 											;	let new_e = (fst e)
 											;	return (unlines ["push " ++ (vmVar maps v),new_e,"call " ++ (\(x,y,z) -> (x))(fromJust (vmVarMaybe maps v)) ++ "." ++ s ++ " " ++ num_e])
---											;	return (unlines ["push local 0",new_e,"call " ++ (\(x,y,z) -> (x))(fromJust (vmVarMaybe maps v)) ++ "." ++ s ++ " " ++ num_e,"pop temp 0"])
 											}
 											else fail "this is a subroutineCall varName fail"
 									})
@@ -246,7 +241,6 @@ subroutineCall thisClassName maps = try(do {s <- subroutineName
 									;	let num_e = (snd e)
 									;	let new_e = (fst e)
 									;	return (unlines [new_e,"call " ++ c ++ "." ++ s ++ " " ++ num_e])
---									;	return (unlines [new_e,"call " ++ c ++ "." ++ s ++ " " ++ num_e,"pop temp 0"])
 									})
 					
 expressionList thisClassName maps cmd	= do{ l <- (commaSep (jackExpression thisClassName maps cmd)); return (unlines l, show (length l))}
